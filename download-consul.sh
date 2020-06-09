@@ -8,7 +8,7 @@ fi
 echo "downloading Consul version $CONSUL_VERSION"
 
 set -e
-downloaddir="${HOME}/installers"
+downloaddir="${HOME}/downloads"
 dirname=consul_"$CONSUL_VERSION"
 dirpath="$downloaddir/consul/$dirname"
 tmppath=/tmp/$dirname
