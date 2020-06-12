@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# source env.sh in same directory as script to set CONSUL_VERSION
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source $DIR/env.sh
+
 if [ -z "$CONSUL_VERSION" ]
 then
   echo "Variable CONSUL_VERSION is not defined.  Exiting without installing Consul."

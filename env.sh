@@ -1,1 +1,1 @@
-export CONSUL_VERSION='1.7.3'
+export CONSUL_VERSION='1.7.4'
