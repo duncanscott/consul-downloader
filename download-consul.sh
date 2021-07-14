@@ -28,20 +28,39 @@ set -e
 downloaddir="${HOME}/downloads"
 dirname=consul_"$CONSUL_VERSION"
 dirpath="$downloaddir/consul/$dirname"
-tmppath=/tmp/$dirname
+tmppath="/tmp/$dirname"
+filename="consul_${CONSUL_VERSION}_linux_amd64.zip"
+shaname="consul_${CONSUL_VERSION}_SHA256SUMS"
+shasig="${shaname}.sig"
+baseurl="https://releases.hashicorp.com/consul/${CONSUL_VERSION}/"
+
 [ -d "$tmppath" ] && \rm -rf "$tmppath"
 mkdir -p "${tmppath}"
 cd $tmppath
 
-curl --silent --remote-name https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip
-curl --silent --remote-name https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_SHA256SUMS
-curl --silent --remote-name https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_SHA256SUMS.sig
-
 set +e
 
-shasum=`sha256sum consul_${CONSUL_VERSION}_linux_amd64.zip`
+echo retrieving ${baseurl}${filename}
+if ! curl --fail --silent --remote-name "${baseurl}${filename}"; then
+  echo "download of ${filename} failed" >&2
+  exit 1
+fi
+
+echo retrieving ${baseurl}${shaname}
+if ! curl --fail --silent --remote-name "${baseurl}${shaname}"; then
+  echo "download of ${shaname} failed" >&2
+  exit 1
+fi
+
+echo retrieving ${baseurl}${shasig}
+if ! curl --fail --silent --remote-name "${baseurl}${shasig}"; then
+  echo "download of ${shasig} failed" >&2
+  exit 1
+fi
+
+shasum=`sha256sum ${filename}`
 echo "verifying sha256sum: ${shasum}"
-grep -q "${shasum}" consul_${CONSUL_VERSION}_SHA256SUMS
+grep -q "${shasum}" "${shaname}"
 if [ $? -eq 0 ]
 then
   echo "sha256sum verified"
@@ -54,7 +73,7 @@ set -e
 
 [ -d "$dirpath" ] && \rm -rf "$dirpath"
 mkdir -p "${dirpath}"
-unzip consul_${CONSUL_VERSION}_linux_amd64.zip
+unzip "${filename}"
 mv * "${dirpath}"
 echo "files downloaded to ${dirpath}"
 ls -l "${dirpath}"
