@@ -4,9 +4,20 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source $DIR/env.sh
 
+# use first argument to script as version if it is supplied and it matches pattern 
+if [ ! -z "$1" ]; then
+  PATTERN="^[0-9]+(\.[0-9]+)*$"
+  if [[ "$1" =~ $PATTERN ]]; then
+    CONSUL_VERSION="$1"
+  else
+    echo "invalid version $1" >&2
+    exit 1
+  fi
+fi
+
 if [ -z "$CONSUL_VERSION" ]
 then
-  echo "Variable CONSUL_VERSION is not defined.  Exiting without installing Consul."
+  echo "Variable CONSUL_VERSION is not defined.  Exiting without installing Consul." >&2
   exit 1
 fi
 
