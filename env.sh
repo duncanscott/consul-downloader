@@ -1,1 +1,1 @@
-export CONSUL_VERSION=1.10.3
+export CONSUL_VERSION=1.11.1
