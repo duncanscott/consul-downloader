@@ -2,7 +2,7 @@
 
 # source env.sh in same directory as script to set CONSUL_VERSION
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source $DIR/env.sh
+source "${DIR}/env.sh"
 
 # use first argument to script as version if it is supplied and it matches pattern 
 if [ ! -z "$1" ]; then
